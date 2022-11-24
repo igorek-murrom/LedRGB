@@ -3,18 +3,23 @@ import tkinter as tk
 from tkinter import ttk
 import serial.tools.list_ports
 
-
+PORT = ""
 BOUND = 9600
 list_port = list(serial.tools.list_ports.comports())
 
 
 def portSrl():
+    global srl, PORT
     P = combobox.get()
-    PORT = ""
+    LOCPORT = ""
     for i in P:
         if i == " ": break
-        PORT += i
-    return PORT
+        LOCPORT += i
+    if PORT != LOCPORT: 
+        PORT = LOCPORT
+        srl = serial.Serial(PORT, BOUND)
+
+
 def fix(R):
     if int(R) < 10: R = '0' + R
     if int(R) < 100: R = '0' + R
@@ -23,7 +28,7 @@ def fix(R):
 
 def update(event):
     list_port = list(serial.tools.list_ports.comports())
-    if (len(list_port) >= 1 and combobox.get() == '') or len(list_port) == 1:combobox.set(list_port[0])
+    if (len(list_port) >= 1 and combobox.get() == '') or len(list_port) == 1: combobox.set(list_port[0])
     elif len(list_port) == 0:combobox.set('')
     combobox['values'] = list_port
     label.config(text="")
@@ -32,24 +37,34 @@ def update(event):
 def send(event):
     update(1)
     try:
-        PORT = portSrl()
+        portSrl()
+        print(PORT)
         label.config(text="")
-        srl = serial.Serial(PORT, BOUND)
-        R = 255 - Rv.get()
-        G = 255 - Gv.get()
-        B = 255 - Bv.get()
+        # R = 255 - Rv.get()
+        # G = 255 - Gv.get()
+        # B = 255 - Bv.get()
+        R = Rv.get()
+        G = Gv.get()
+        B = Bv.get()
         R = fix(str(R))
         G = fix(str(G))
         B = fix(str(B))
 
-
         srl.write(R.encode())
         srl.write(G.encode())
         srl.write(B.encode())
+        if rgb == -1: srl.write(b'0')
+        elif rgb == 1: srl.write(b'1')
     except Exception as e:
         print(e)
         combobox.set('')
         label.config(text="нет COM-порта")
+
+rgb = -1
+
+def RGB(event):
+    global rgb
+    rgb *= -1
 
 
 root = tk.Tk()
@@ -71,6 +86,8 @@ button = tk.Button(root, text='Применить')
 button.bind('<Button-1>', send)
 buttonUpdate = tk.Button(root, text='Обновить список')
 buttonUpdate.bind('<Button-1>', update)
+buttonRGB = tk.Button(root, text='RGB')
+buttonRGB.bind('<Button-1>', RGB)
 
 label = tk.Label(text="", font="Arial 8")
 labelR = tk.Label(text="  R  ", font="Arial 8")
@@ -86,6 +103,7 @@ labelR.grid(row=0, column=0)
 labelG.grid(row=1, column=0)
 labelB.grid(row=2, column=0)
 button.grid(row=3, column=0, columnspan=3)
+buttonRGB.grid(row=3, column=2)
 label.grid(row=4, column=0, columnspan=3)
 combobox.grid(row=5, column=2, columnspan=1)
 buttonUpdate.grid(row=5, column=1, columnspan=1)
