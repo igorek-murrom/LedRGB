@@ -1,8 +1,7 @@
 {
-    "port": "COM6",
+    "sketch": "down.ino",
+    "configuration": "cpu=atmega328old",
     "board": "arduino:avr:nano",
-    "sketch": "LedRGB.ino",
-    "programmer": "arduino:avrispmkii",
-    "output": "../down/build/ArduinoOutput",
-    "configuration": "cpu=atmega328old"
+    "port": "/dev/ttyUSB0",
+    "programmer": "avrispmkii"
 }

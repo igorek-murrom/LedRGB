@@ -1,5 +1,3 @@
-#include <Arduino.h>
-#line 1 "c:\\Users\\dmina\\LedRGB\\down\\LedRGB.ino"
 char r1, g1, b1, r2, g2, b2, r3, g3, b3, check = '0';
 String RS, GS, BS, rs1, rs2, rs3, gs1, gs2, gs3, bs1, bs2, bs3;
 int R = 0, G = 0, B = 0;
@@ -10,19 +8,6 @@ unsigned long timing;
 #define PIN_G 10    // пин для канала G
 #define PIN_B 6   // пин для канала B
 
-#line 11 "c:\\Users\\dmina\\LedRGB\\down\\LedRGB.ino"
-bool take();
-#line 56 "c:\\Users\\dmina\\LedRGB\\down\\LedRGB.ino"
-void setup();
-#line 63 "c:\\Users\\dmina\\LedRGB\\down\\LedRGB.ino"
-void loop();
-#line 76 "c:\\Users\\dmina\\LedRGB\\down\\LedRGB.ino"
-void RGB(int p);
-#line 123 "c:\\Users\\dmina\\LedRGB\\down\\LedRGB.ino"
-void setRGB(int r, int g, int b, int pause);
-#line 132 "c:\\Users\\dmina\\LedRGB\\down\\LedRGB.ino"
-bool sleep(int vipe);
-#line 11 "c:\\Users\\dmina\\LedRGB\\down\\LedRGB.ino"
 bool take() {
   if (Serial.available() > 9) {
     r1 = Serial.read();
@@ -76,6 +61,7 @@ void setup() {
 }
 
 void loop() {
+  setRGB(0, 255, 0, 10);
   flag = take();
 
   if (flag) {
